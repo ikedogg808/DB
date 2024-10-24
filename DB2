@@ -1,0 +1,108 @@
+openapi: 3.0.0
+info:
+  title: Legal Data API
+  description: API for accessing legal cases, complaints, and laws from CFPB, FTC, and Cornell Law
+  version: 1.0.0
+servers:
+  - url: https://your-api-url.com
+paths:
+  /cfpb/complaints:
+    get:
+      summary: Get CFPB complaints
+      description: Retrieve consumer complaints from CFPB
+      operationId: get_cfpb_complaints  # Added operationId
+      parameters:
+        - in: query
+          name: query
+          required: false
+          schema:
+            type: string
+          description: The term to search for in CFPB complaints (e.g., "credit card", "fraud")
+      responses:
+        '200':
+          description: A list of CFPB complaints
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    complaint_id:
+                      type: string
+                      description: Unique complaint ID
+                    date_received:
+                      type: string
+                      description: Date the complaint was received
+                    product:
+                      type: string
+                      description: The product category (e.g., "Credit card")
+                    issue:
+                      type: string
+                      description: The issue raised in the complaint
+                    company:
+                      type: string
+                      description: Company involved in the complaint
+                    status:
+                      type: string
+                      description: Status of the complaint
+
+  /ftc/cases:
+    get:
+      summary: Get FTC cases
+      description: Fetch legal cases and proceedings from the FTC
+      operationId: get_ftc_cases  # Added operationId
+      responses:
+        '200':
+          description: A list of FTC cases
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    case_title:
+                      type: string
+                      description: Title of the case
+                    case_url:
+                      type: string
+                      description: URL to the full case
+                    status:
+                      type: string
+                      description: Status of the case
+                    date_filed:
+                      type: string
+                      description: Date when the case was filed
+
+  /cornell/laws:
+    get:
+      summary: Get laws from Cornell Law School (LII)
+      description: Retrieve laws and statutes based on search queries from Cornell's Legal Information Institute (LII)
+      operationId: get_cornell_laws  # Added operationId
+      parameters:
+        - in: query
+          name: query
+          required: true
+          schema:
+            type: string
+          description: Search term for the law or statute (e.g., "privacy", "consumer protection")
+      responses:
+        '200':
+          description: A list of laws or statutes related to the query
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    law_title:
+                      type: string
+                      description: The title of the law or statute
+                    law_url:
+                      type: string
+                      description: URL to the full law or statute
+                    description:
+                      type: string
+                      description: Brief description of the law
