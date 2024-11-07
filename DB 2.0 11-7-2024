@@ -1,0 +1,286 @@
+openapi: 3.0.0
+info:
+  title: Legal Data API
+  description: API for accessing full legal data from various sources, including CFPB, FTC, Cornell Law, SCOTUS, GovInfo, and CourtListener for extensive legal research.
+  version: 1.0.0
+servers:
+  - url: https://your-api-url.com
+paths:
+  /cfpb/complaints:
+    get:
+      summary: Access all CFPB complaints
+      description: Retrieve the full list of consumer complaints from the Consumer Financial Protection Bureau (CFPB), with optional filters.
+      operationId: get_all_cfpb_complaints
+      parameters:
+        - in: query
+          name: query
+          required: false
+          schema:
+            type: string
+          description: Optional search term for specific CFPB complaints (e.g., "credit card", "fraud")
+        - in: query
+          name: date_received
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Filter complaints by date received
+      responses:
+        '200':
+          description: A full list of CFPB complaints, with optional filters applied
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    complaint_id:
+                      type: string
+                      description: Unique complaint ID
+                    date_received:
+                      type: string
+                      description: Date the complaint was received
+                    product:
+                      type: string
+                      description: Product category (e.g., "Credit card")
+                    issue:
+                      type: string
+                      description: Issue raised in the complaint
+                    company:
+                      type: string
+                      description: Company involved in the complaint
+                    status:
+                      type: string
+                      description: Status of the complaint
+
+  /ftc/cases:
+    get:
+      summary: Access all FTC cases
+      description: Retrieve the full list of legal cases and proceedings from the Federal Trade Commission (FTC), with optional filters.
+      operationId: get_all_ftc_cases
+      parameters:
+        - in: query
+          name: status
+          required: false
+          schema:
+            type: string
+          description: Filter cases by status (e.g., "open", "closed")
+      responses:
+        '200':
+          description: A full list of FTC cases, with optional filters applied
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    case_title:
+                      type: string
+                      description: Title of the case
+                    case_url:
+                      type: string
+                      description: URL to the full case
+                    status:
+                      type: string
+                      description: Status of the case
+                    date_filed:
+                      type: string
+                      description: Date when the case was filed
+
+  /cornell/laws:
+    get:
+      summary: Access all laws from Cornell Law School (LII)
+      description: Retrieve the full set of laws and statutes from Cornell's Legal Information Institute (LII), with optional filters.
+      operationId: get_all_cornell_laws
+      parameters:
+        - in: query
+          name: query
+          required: false
+          schema:
+            type: string
+          description: Optional search term for specific laws or statutes (e.g., "privacy", "consumer protection")
+        - in: query
+          name: category
+          required: false
+          schema:
+            type: string
+          description: Filter by law category (e.g., "Federal law", "State law", "International law")
+        - in: query
+          name: date_updated
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Filter laws by date of last update or enactment
+      responses:
+        '200':
+          description: A full list of laws or statutes from Cornell Law, with optional filters applied
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    law_title:
+                      type: string
+                      description: Title of the law or statute
+                    law_url:
+                      type: string
+                      description: URL to the full law or statute on Cornell's LII
+                    description:
+                      type: string
+                      description: Brief description of the law
+                    category:
+                      type: string
+                      description: Category of the law (e.g., "Federal law", "State law")
+                    date_updated:
+                      type: string
+                      description: Date of last update or enactment
+
+  /scotus/opinions:
+    get:
+      summary: Access all SCOTUS opinions
+      description: Retrieve the full list of Supreme Court opinions, with optional filters.
+      operationId: get_all_scotus_opinions
+      parameters:
+        - in: query
+          name: query
+          required: false
+          schema:
+            type: string
+          description: Optional search term for specific SCOTUS opinions or cases (e.g., "freedom of speech", "civil rights")
+        - in: query
+          name: date
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Filter opinions by date of decision
+      responses:
+        '200':
+          description: A full list of SCOTUS opinions, with optional filters applied
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    case_name:
+                      type: string
+                      description: Name of the Supreme Court case
+                    docket_number:
+                      type: string
+                      description: Docket number for the case
+                    opinion_url:
+                      type: string
+                      description: URL to the full opinion text
+                    decision_date:
+                      type: string
+                      description: Date of the decision
+                    summary:
+                      type: string
+                      description: Brief summary of the case and decision
+
+  /govinfo/federal_resources:
+    get:
+      summary: Access all Federal legal resources from GovInfo
+      description: Retrieve the full set of federal legal resources from GovInfo, including opinions, statutes, and regulations.
+      operationId: get_all_govinfo_resources
+      parameters:
+        - in: query
+          name: resource_type
+          required: false
+          schema:
+            type: string
+            enum: [opinions, statutes, regulations]
+          description: Filter by type of resource (e.g., "opinions", "statutes", "regulations")
+        - in: query
+          name: date
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Filter resources by publication date
+      responses:
+        '200':
+          description: A full list of federal legal resources, with optional filters applied
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    resource_title:
+                      type: string
+                      description: Title of the federal resource
+                    resource_type:
+                      type: string
+                      description: Type of resource (e.g., "Opinion", "Statute", "Regulation")
+                    resource_url:
+                      type: string
+                      description: URL to the full resource text
+                    publication_date:
+                      type: string
+                      description: Date of publication
+                    summary:
+                      type: string
+                      description: Brief summary of the resource
+
+  /courtlistener/cases:
+    get:
+      summary: Access all cases on CourtListener
+      description: Retrieve the full set of legal cases and opinions on CourtListener, with optional filters.
+      operationId: get_all_courtlistener_cases
+      parameters:
+        - in: query
+          name: query
+          required: false
+          schema:
+            type: string
+          description: Optional search term for specific cases (e.g., "freedom of speech", "privacy law", "docket number")
+        - in: query
+          name: court
+          required: false
+          schema:
+            type: string
+          description: Filter cases by specific court (e.g., "Supreme Court", "Ninth Circuit")
+        - in: query
+          name: date_range
+          required: false
+          schema:
+            type: string
+            example: "2020-01-01:2023-01-01"
+          description: Date range filter for cases, in `start_date:end_date` format (e.g., "2020-01-01:2023-01-01")
+      responses:
+        '200':
+          description: A full list of cases from CourtListener, with optional filters applied
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    case_title:
+                      type: string
+                      description: Title of the case
+                    docket_number:
+                      type: string
+                      description: Docket number of the case
+                    court:
+                      type: string
+                      description: Court that issued the opinion
+                    date_decided:
+                      type: string
+                      description: Date the opinion was issued
+                    opinion_url:
+                      type: string
+                      description: URL to the full opinion text on CourtListener
+                    summary:
+                      type: string
+                      description: Brief summary of the case or key issues
