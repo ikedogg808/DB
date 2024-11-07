@@ -1,0 +1,269 @@
+openapi: 3.0.0
+info:
+  title: Legal Research API
+  description: API for comprehensive research into case law, legal texts, complaints, and regulatory news from CFPB, FTC, and Cornell Law.
+  version: 1.0.0
+servers:
+  - url: https://your-api-url.com
+paths:
+  /cfpb/complaints:
+    get:
+      summary: Get detailed CFPB complaints
+      description: Retrieve extensive information on consumer complaints filed with CFPB, including specific issues, company responses, and complaint narratives.
+      operationId: get_cfpb_complaints
+      parameters:
+        - in: query
+          name: query
+          required: false
+          schema:
+            type: string
+          description: Term to search within CFPB complaints (e.g., "credit card", "fraud")
+        - in: query
+          name: company
+          required: false
+          schema:
+            type: string
+          description: Filter by company name
+        - in: query
+          name: product
+          required: false
+          schema:
+            type: string
+          description: Filter by product category
+        - in: query
+          name: state
+          required: false
+          schema:
+            type: string
+          description: Filter by U.S. state abbreviation
+      responses:
+        '200':
+          description: A list of detailed CFPB complaints
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    complaint_id:
+                      type: string
+                      description: Unique complaint ID
+                    date_received:
+                      type: string
+                      description: Date complaint was received
+                    product:
+                      type: string
+                      description: Product category (e.g., "Credit card")
+                    issue:
+                      type: string
+                      description: The issue in the complaint
+                    sub_issue:
+                      type: string
+                      description: More specific issue category
+                    narrative:
+                      type: string
+                      description: Consumer-provided description of the complaint
+                    company_response:
+                      type: string
+                      description: Company’s response to the complaint
+                    status:
+                      type: string
+                      description: Current complaint status
+                    consumer_disputed:
+                      type: boolean
+                      description: Whether the consumer disputed the company’s response
+
+  /cfpb/news:
+    get:
+      summary: Get latest CFPB news
+      description: Fetch recent news, press releases, and announcements from the CFPB
+      operationId: get_cfpb_news
+      responses:
+        '200':
+          description: A list of CFPB news items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      description: News title
+                    date:
+                      type: string
+                      description: Date of publication
+                    summary:
+                      type: string
+                      description: Brief summary of the news item
+                    url:
+                      type: string
+                      description: URL to full news article
+
+  /cfpb/class-actions:
+    get:
+      summary: Get CFPB class-action lawsuits and investigations
+      description: Retrieve information about CFPB class-action lawsuits and active investigations
+      operationId: get_cfpb_class_actions
+      responses:
+        '200':
+          description: A list of class-action lawsuits and investigations from the CFPB
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      description: Title of the case or investigation
+                    case_id:
+                      type: string
+                      description: Unique case or investigation ID
+                    date_filed:
+                      type: string
+                      description: Date the case was filed
+                    status:
+                      type: string
+                      description: Current status (e.g., "Ongoing", "Resolved")
+                    description:
+                      type: string
+                      description: Brief description of the case or investigation
+                    url:
+                      type: string
+                      description: URL to full case or investigation details
+
+  /ftc/cases:
+    get:
+      summary: Get detailed FTC cases
+      description: Retrieve legal cases and proceedings from the FTC for case law research
+      operationId: get_ftc_cases
+      parameters:
+        - in: query
+          name: case_title
+          required: false
+          schema:
+            type: string
+          description: Search for a case by title
+        - in: query
+          name: status
+          required: false
+          schema:
+            type: string
+          description: Filter by case status (e.g., "Closed", "Ongoing")
+      responses:
+        '200':
+          description: A list of FTC cases
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    case_title:
+                      type: string
+                      description: Title of the case
+                    case_id:
+                      type: string
+                      description: Unique identifier for the case
+                    date_filed:
+                      type: string
+                      description: Filing date
+                    status:
+                      type: string
+                      description: Current case status
+                    summary:
+                      type: string
+                      description: Brief summary of the case
+                    url:
+                      type: string
+                      description: URL to full case details
+
+  /cornell/laws:
+    get:
+      summary: Get laws and statutes from Cornell Law School
+      description: Access extensive legal texts, statutes, and case law information for research purposes
+      operationId: get_cornell_laws
+      parameters:
+        - in: query
+          name: query
+          required: true
+          schema:
+            type: string
+          description: Search term for the law or statute (e.g., "consumer protection", "privacy")
+        - in: query
+          name: jurisdiction
+          required: false
+          schema:
+            type: string
+          description: Filter by jurisdiction (e.g., "federal", "state")
+      responses:
+        '200':
+          description: A list of laws and statutes from Cornell Law School (LII)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    law_title:
+                      type: string
+                      description: Title of the law or statute
+                    law_url:
+                      type: string
+                      description: URL to the full law or statute
+                    description:
+                      type: string
+                      description: Brief description of the law
+                    jurisdiction:
+                      type: string
+                      description: Jurisdiction of the law (e.g., "Federal", "State")
+
+  /cornell/case-law:
+    get:
+      summary: Get case law from Cornell Law School
+      description: Retrieve detailed case law records for research on legal precedents
+      operationId: get_cornell_case_law
+      parameters:
+        - in: query
+          name: query
+          required: true
+          schema:
+            type: string
+          description: Search term for case law (e.g., "privacy law", "civil rights")
+        - in: query
+          name: court
+          required: false
+          schema:
+            type: string
+          description: Filter by court (e.g., "Supreme Court", "Court of Appeals")
+      responses:
+        '200':
+          description: A list of case law records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    case_name:
+                      type: string
+                      description: Name of the case
+                    case_url:
+                      type: string
+                      description: URL to the full case record
+                    court:
+                      type: string
+                      description: Court where the case was heard
+                    date_decided:
+                      type: string
+                      description: Date the case was decided
+                    summary:
+                      type: string
+                      description: Brief summary of the case
