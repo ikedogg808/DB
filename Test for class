@@ -1,0 +1,71 @@
+import requests
+
+# Base URL for the API
+BASE_URL = "https://your-api-url.com"  # Replace with your actual base URL
+
+# Optional authentication header
+HEADERS = {
+    "Authorization": "Bearer YOUR_API_KEY_HERE"  # Replace with your API key if required
+}
+
+
+def get_cfpb_complaints(query=None):
+    """Fetch CFPB complaints with an optional search query."""
+    url = f"{BASE_URL}/cfpb/complaints"
+    params = {"query": query} if query else {}
+    
+    try:
+        response = requests.get(url, headers=HEADERS, params=params)
+        response.raise_for_status()  # Raises an HTTPError for bad responses
+        return response.json()
+    except requests.RequestException as e:
+        print(f"Error fetching CFPB complaints: {e}")
+        return None
+
+
+def get_ftc_cases():
+    """Fetch FTC cases."""
+    url = f"{BASE_URL}/ftc/cases"
+    
+    try:
+        response = requests.get(url, headers=HEADERS)
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as e:
+        print(f"Error fetching FTC cases: {e}")
+        return None
+
+
+def get_cornell_laws(query):
+    """Fetch Cornell laws with a required search query."""
+    url = f"{BASE_URL}/cornell/laws"
+    params = {"query": query}
+    
+    try:
+        response = requests.get(url, headers=HEADERS, params=params)
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as e:
+        print(f"Error fetching Cornell laws: {e}")
+        return None
+
+
+def main():
+    # Fetch CFPB complaints with an example query
+    print("Fetching CFPB complaints for 'credit card'...")
+    cfpb_complaints = get_cfpb_complaints(query="credit card")
+    print("CFPB Complaints:", cfpb_complaints)
+    
+    # Fetch FTC cases
+    print("\nFetching FTC cases...")
+    ftc_cases = get_ftc_cases()
+    print("FTC Cases:", ftc_cases)
+    
+    # Fetch Cornell laws with an example query
+    print("\nFetching Cornell laws for 'consumer protection'...")
+    cornell_laws = get_cornell_laws(query="consumer protection")
+    print("Cornell Laws:", cornell_laws)
+
+
+if __name__ == "__main__":
+    main()
